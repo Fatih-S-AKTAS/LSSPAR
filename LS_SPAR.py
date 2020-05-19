@@ -677,7 +677,7 @@ for example; Variance will be negative")
             self.cov = A.T.dot(A)
             self.tablelookup = {}
             self.tablelookupqri = {}
-            self.many = 1
+            self.many = 4
             self.residual_squared = []
             self.indexes = []
             self.coefficients = []
@@ -4934,8 +4934,7 @@ is not guaranteed")
             print("initial_point should be an array of size (self.n,1) not (self.n,) careful with \
 python syntax of arrays")
             return None
-        elif self.many != 1:
-            print(" use solve_multiple for top k best subsets")
+        
         mem = hpy()
         mem.heap()
         mem.setrelheap()
