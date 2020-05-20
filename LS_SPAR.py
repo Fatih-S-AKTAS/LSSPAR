@@ -2087,7 +2087,7 @@ is not guaranteed")
             print(q.qsize())
              
             [low,[P,C,d]] = q.get()
-            #print("proof I am working",str(self.node),"many nodes by now",str(q.qsize()),",qsizebt\
+            print("proof I am working",str(self.node),"many nodes by now",str(q.qsize()),",qsizebt\
 #w",str(self.best_feasible),"thisis best feasible,current lowerbound",str(low))
             if len_c < self.s:
                 if len_c + len_p <= self.s:
@@ -2969,7 +2969,7 @@ is not guaranteed")
                 """ termination condition of the problem if we visit all the nodes then search is over """
                 [low,[P,C,coef,len_c,len_p]] = L[i].get()
                 """ get a node from the graph, with best SSE, sum of squared error, of unconstrained problem """
-                #print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-2:-1])
+                print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-2:-1])
                 if len_c < self.s:
                     if len_p + len_c <= self.s:
                         self.residual_squared.append(low)
@@ -3061,7 +3061,7 @@ is not guaranteed")
                 """ termination condition of the problem if we visit all the nodes then search is over """
                 [low,[P,C,coef,len_c,len_p]] = L[i].get()
                 """ get a node from the graph, with best SSE, sum of squared error, of unconstrained problem """
-                #print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-2:-1])
+                print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-2:-1])
                 if len_c < self.s:
                     if len_p + len_c <= self.s:
                         self.residual_squared.append(low)
@@ -4376,7 +4376,7 @@ is not guaranteed")
             """ termination condition of the problem if we visit all the nodes then search is over """
             [low,[P,C,coef,len_c,len_p]] = q.get()
             """ get a node from the graph, with best SSE, sum of squared error, of unconstrained problem """
-            #print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-1:])
+            print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-1:])
             if len_c < self.s:
                 if len_p + len_c <= self.s:
                     self.best_feasible = low
@@ -4934,7 +4934,7 @@ is not guaranteed")
             print("initial_point should be an array of size (self.n,1) not (self.n,) careful with \
 python syntax of arrays")
             return None
-        
+
         mem = hpy()
         mem.heap()
         mem.setrelheap()
@@ -4942,7 +4942,7 @@ python syntax of arrays")
         if self.out != 2:
             sys.stdout = open(os.devnull, 'w')
         else:
-            sys.stdout = self.original_stdout
+            sys.stdout = self.original_stdout    
             
         if self.heur == True:
             [Xgreed,funval_greed] = greedy_sparse_simplex(f_LI,g_LI,self.s,self.iter,\
@@ -4993,9 +4993,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "best" \
@@ -5022,9 +5022,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "best" \
@@ -5048,9 +5048,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "best" \
@@ -5077,9 +5077,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-st-lsc" and self.search == "best" \
@@ -5103,9 +5103,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "best" \
@@ -5132,9 +5132,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "best" \
@@ -5158,9 +5158,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "best" \
@@ -5187,9 +5187,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5216,9 +5216,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5248,9 +5248,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5275,9 +5275,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5305,9 +5305,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5335,9 +5335,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5368,9 +5368,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5396,9 +5396,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "depth" \
@@ -5427,9 +5427,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5453,9 +5453,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5482,9 +5482,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5508,9 +5508,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5537,9 +5537,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5563,9 +5563,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5592,9 +5592,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5618,9 +5618,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-st-lsc" and self.search == "breadth" \
@@ -5647,9 +5647,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5673,9 +5673,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5702,9 +5702,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5728,9 +5728,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5757,9 +5757,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5783,9 +5783,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5812,9 +5812,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5838,9 +5838,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "best" \
@@ -5868,9 +5868,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -5898,9 +5898,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -5931,9 +5931,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -5959,9 +5959,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -5990,9 +5990,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -6021,9 +6021,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -6054,9 +6054,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -6083,9 +6083,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "depth" \
@@ -6114,9 +6114,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6141,9 +6141,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6171,9 +6171,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6198,9 +6198,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6228,9 +6228,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6255,9 +6255,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6285,9 +6285,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6312,9 +6312,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "m-lsc" and self.search == "breadth" \
@@ -6342,9 +6342,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
 
@@ -6370,9 +6370,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "best" \
@@ -6400,9 +6400,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "best" \
@@ -6427,9 +6427,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "best" \
@@ -6457,9 +6457,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "lexi" and self.search == "best" \
@@ -6484,9 +6484,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "best" \
@@ -6514,9 +6514,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "best" \
@@ -6541,9 +6541,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "best" \
@@ -6571,9 +6571,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6601,9 +6601,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6634,9 +6634,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6664,9 +6664,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6697,9 +6697,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6728,9 +6728,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6761,9 +6761,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6790,9 +6790,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "depth" \
@@ -6822,9 +6822,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -6849,9 +6849,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -6879,9 +6879,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -6906,9 +6906,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -6936,9 +6936,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -6963,9 +6963,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -6993,9 +6993,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -7020,9 +7020,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "lexi" and self.search == "breadth" \
@@ -7050,9 +7050,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7077,9 +7077,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7107,9 +7107,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7134,9 +7134,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7164,9 +7164,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7191,9 +7191,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7221,9 +7221,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7248,9 +7248,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "best" \
@@ -7278,9 +7278,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7308,9 +7308,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7341,9 +7341,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7369,9 +7369,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7400,9 +7400,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7431,9 +7431,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7464,9 +7464,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7493,9 +7493,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "depth" \
@@ -7524,9 +7524,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7551,9 +7551,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7581,9 +7581,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7608,9 +7608,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7638,9 +7638,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
 
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7665,9 +7665,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7695,9 +7695,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7722,9 +7722,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.best_feasible,self.solset,self.node]
         
         elif  self.enumerate == "stat" and self.search == "breadth" \
@@ -7752,9 +7752,9 @@ python syntax of arrays")
             self.x_vector = x_vector
             sys.stdout = self.original_stdout
             U,D,V = svd(self.A[:,self.solset])
-            error = self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2 * 10 ** -16
+            error = (D[0]/D[-1] + self.best_feasible ** 0.5 * (D[0]/D[-1]) ** 2) * (finfo(float64).eps/2)
             precision = -1*log10(error)
-            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision )
+            print("Error bound on the norm of the x vector",error,"Number of correct digits of x ",precision.real )
             return [self.solcoef,self.bdest_feasible,self.solset,self.node]
         
     def solve_multiple(self,C = []):
@@ -8219,11 +8219,16 @@ python syntax of arrays")
         mem.setrelheap()
         t0 = time.process_time()
         
+        if self.out != 2:
+            sys.stdout = open(os.devnull, 'w')
+        else:
+            sys.stdout = self.original_stdout   
+            
         P = list(range(self.n))
         if C != []:
             for i in range(len(C)):
                 P.remove(C[i])
-                
+             
         t2 = time.process_time()
         t3 = time.time()
         self.solve_sp_mk0s(P,C)
@@ -8231,6 +8236,10 @@ python syntax of arrays")
         finish = time.process_time()
         duration = finish-t0
         self.cpu = duration
+        if self.out == 0:
+            sys.stdout = open(os.devnull, 'w')
+        else:
+            sys.stdout = self.original_stdout   
         print("CPU time of the algorithm",duration,"seconds")
         m = mem.heap()
         print(m)
