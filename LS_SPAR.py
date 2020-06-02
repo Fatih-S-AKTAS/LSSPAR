@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 29 20:00:27 2019
-
-@author: Fatih
-"""
-
 from scipy.linalg import *
 from scipy.sparse import *
 from numpy import *
@@ -17,7 +10,7 @@ import time
 import os
 import sys
 import bisect
-
+#import cvxpy as cp
     
 def columnsum(M):
     r = array([0]*len(M[0]))
@@ -664,8 +657,16 @@ for example; Variance will be negative")
             self.search = "best"
             """ initializing the search type to best first search """
             self.solver = "qr"
-            """ initializing the lstsq solver to qr"""
+            """ initializing the least squares solver to qr"""
+            self.lapack_driver = "gelsy"
+            """ overwriting the default lstsq lapack driver """
             self.ill = False
+            if linalg.matrix_rank(A) < self.n:
+                print("Matrix A, either has linearly dependent columns or seriously ill-conditioned\
+you can proceed and solve the problem but, accuracy and precision of the solution\
+is not guaranteed")
+                self.ill = True
+            """ A = Q*R, """
             q,r = qr(A)
             self.q = q
             self.r = r
@@ -677,24 +678,65 @@ for example; Variance will be negative")
             self.cov = A.T.dot(A)
             self.tablelookup = {}
             self.tablelookupqri = {}
+            """ lookup tables for solving all subset problem """
             self.many = 4
+            """ initializing the number of solutions for multiple subset problem """
             self.residual_squared = []
             self.indexes = []
             self.coefficients = []
-            if linalg.matrix_rank(A) < self.n:
-                print("Matrix A, either has linearly dependent columns or seriously ill-conditioned\
-you can proceed and solve the problem but, accuracy and precision of the solution\
-is not guaranteed")
-                self.ill = True
+            """ initializing the arrays of solution parameters """
+            
+            """ the following parameters are only used by qp_mip1 which is not part of LSSPAR"""
+            #self.bigm = max(abs(lstsq(A,b)[0]))*4  
+            #self.verbose = False
+            #self.solver2 = "MOSEK"
  
+    """
+    This function was only used for comparison. It is not part of LSSPAR, also it requires CVXPY and a solver. 
+    def qp_mip1(self,ind,ce = []):
+        
+        A_i = vstack((eye(self.n),-1*eye(self.n)))
+        A_iy = vstack((-1*self.bigm*eye(self.n),-1*self.bigm*eye(self.n)))
+        A_iy2 = ones([1,self.n])
+        
+        
+        b_i = zeros([2*self.n,1])
+        #b_i2 = vstack((self.s,-1*self.s))
+        b_i2 = self.s
+        
+        x = cp.Variable((self.n,1))
+        y = cp.Variable((self.n,1), integer = True) 
+        
+        cost = cp.Minimize(cp.sum_squares(self.A @ x - self.b))
+        if ce == []:
+            constraints = [ A_i @ x + A_iy @ y <= b_i, A_iy2 @ y <= b_i2, eye(self.n) @ y <= ones([self.n,1]) ]
+        else:
+            k = zeros([self.n,1])
+            k[ce] = 1
+            CE = vstack((diag(k),-1*diag(k)))
+            CEb = vstack((k,-1*k))
+            constraints = [ A_i @ x + A_iy @ y <= b_i, A_iy2 @ y <= b_i2, eye(self.n) @ y <= ones([self.n,1]), CE @ y <= CEb ]
+        
+        prob = cp.Problem(cost,constraints)
+        prob.solve(solver = self.solver2,verbose = self.verbose)
+        
+        self.residual_squared.append(prob.value)
+        ind = where(abs(x.value[:self.n,0]) > 1e-6)[0]
+        self.indexes.append(ind)
+        self.coefficients.append(x.value[ind,0])
+        return [x.value[:self.n,0],prob.value,y.value[:self.n,0]]
+    """
     
     def qr_lstsq(self,ind):
-        l = len(ind)
+        
+        l = len(ind) 
         t = max(ind)+1
+        """ since R is upper triangular, rows beyond t are 0 """
         qs,rs = qr(self.rtilde[:t,ind])
         rhs = transpose(qs).dot(self.qb[:t,[0]])
         x = solve_triangular(rs[:l,:l],rhs[:l,0])
         res = norm(rhs[l:]) ** 2 + norm(self.qb[t:]) ** 2
+        """ using QR to solve a least squares problem """
         return [x,res]
     
 
@@ -702,13 +744,17 @@ is not guaranteed")
         check = str(ind)
         if check in self.tablelookup:
             return self.tablelookup[check]
+        """ table look up for all subsets problem """
         l = len(ind)
         t = max(ind)+1
+        """ since R is upper triangular, rows beyond t are 0 """
         qs,rs = qr(self.rtilde[:t,ind])
         rhs = transpose(qs).dot(self.qb[:t,[0]])
         x = solve_triangular(rs[:l,:l],rhs[:l,0])
         res = norm(rhs[l:]) ** 2 +  norm(self.qb[t:]) ** 2
+        """ using QR to solve a least squares problem """
         self.tablelookup[check] = [x,res]
+        """ registering the solution to the table """
         return [x,res]
 
     
@@ -716,37 +762,47 @@ is not guaranteed")
         check = str(ind)
         if check in self.tablelookup:
             return self.tablelookup[check]
+        """ table look up for all subsets problem """
         l = len(ind)
         t = max(ind)+1
-        sol =  lstsq(self.rtilde[:t,ind],self.qb[:t],lapack_driver = "gelsy")
+        """ since R is upper triangular, rows beyond t are 0 """
+        sol =  lstsq(self.rtilde[:t,ind],self.qb[:t],lapack_driver = self.lapack_driver)
+        """ gelsy routine proved to be faster in our experience """
         
         x = sol[0][:,0]
         res = norm(self.rtilde[:t,ind].dot(x)-self.qb[:t,0])**2 +  norm(self.qb[t:]) ** 2
         self.tablelookup[check] = [x,res]
+        """ registering the solution """
         return [x,res]
     
     def lstsq_qr(self,ind):
         l = len(ind)
         t = max(ind)+1
-        sol =  lstsq(self.rtilde[:t,ind],self.qb[:t],lapack_driver = "gelsy")
+        """ since R is upper triangular, rows beyond t are 0 """
+        sol =  lstsq(self.rtilde[:t,ind],self.qb[:t],lapack_driver = self.lapack_driver)
         x = sol[0][:,0]
         res = norm(self.rtilde[:t,ind].dot(x)-self.qb[:t,0])**2 +  norm(self.qb[t:]) ** 2
+        """ using QR to solve a least squares problem """
         return [x,res]
     
     def lstsq(self,ind):
-        sol = lstsq(self.A[:,ind],self.bv)
+        sol = lstsq(self.A[:,ind],self.bv,lapack_driver = self.lapack_driver)
         x = sol[0]
         res = sol[1]
+        """ pure numpy lstsq to solve  least squares problem """
         return [x,res]
     
     def lstsqi(self,ind):
-        sol = lstsq(self.A[:,ind],self.bv)
+        sol = lstsq(self.A[:,ind],self.bv,lapack_driver = self.lapack_driver)
         x = sol[0]
         res = norm(self.A.dot(x)-self.b) ** 2
+        """ pure numpy lstsq to solve ill conditioned least squares problem, since lstsq does not return a residual value when the
+        problem is ill conditioend"""
         return [x,res]
+    
     """
             
-    side quest, less flop = more cpu time in python LULW
+    side quest, less flop = more cpu time, but executed by python = much worse than doing more under Fortran
     
     def rotate(x):
         if x[1] == 0:
@@ -3036,6 +3092,7 @@ is not guaranteed")
         
         This algorithm finds all subsets of size 1 to s, after initial qr, svd is used to find least squares solution, it is faster because
         q,r requires q to be formed explicitly which makes it slower. Best first search and m-st-lsc is used.
+        
         """
 
         L = [0]*(self.s+1)
@@ -4376,7 +4433,7 @@ is not guaranteed")
             """ termination condition of the problem if we visit all the nodes then search is over """
             [low,[P,C,coef,len_c,len_p]] = q.get()
             """ get a node from the graph, with best SSE, sum of squared error, of unconstrained problem """
-            print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-1:])
+            #print("lowerbound for now",low,"number of nodes",self.node,"len of chosen",len_c,"len of possible",len_p,"last chosen",C[-1:])
             if len_c < self.s:
                 if len_p + len_c <= self.s:
                     self.best_feasible = low
@@ -4936,14 +4993,22 @@ python syntax of arrays")
             return None
 
         mem = hpy()
+        """ memory object """
         mem.heap()
+        """ check the objects that are in memory right now """
         mem.setrelheap()
+        """ referencing this point, memory usage will be calculated """
         t0 = time.process_time()
+        """ referencing this point, cpu usage will be calculated """
+        
         if self.out != 2:
             sys.stdout = open(os.devnull, 'w')
         else:
             sys.stdout = self.original_stdout    
-            
+        """ whether user wants to print every step of the algorithm or not """
+        
+        
+        """
         if self.heur == True:
             [Xgreed,funval_greed] = greedy_sparse_simplex(f_LI,g_LI,self.s,self.iter,\
             self.initial_point,self.A,self.b)
@@ -4965,6 +5030,10 @@ python syntax of arrays")
                 self.best_feasible = funval_partial
                 
                 
+                benched heuristic approch
+        """    
+        
+        """ so many if conditions below to find and call the right function """
                 
         if self.enumerate == "m-st-lsc" and self.search == "best" \
         and self.solver == "svd" and self.ill == False and C == []:
@@ -7789,19 +7858,28 @@ python syntax of arrays")
             return None
         
         mem = hpy()
+        """ memory object """
         mem.heap()
+        """ check the objects that are in memory right now """
         mem.setrelheap()
+        """ referencing this point, memory usage will be calculated """
         t0 = time.process_time()
+        """ referencing this point, cpu usage will be calculated """
+        
         if self.out != 2:
             sys.stdout = open(os.devnull, 'w')
         else:
-            sys.stdout = self.original_stdout
+            sys.stdout = self.original_stdout    
+        """ whether user wants to print every step of the algorithm or not """
         
         P = list(range(self.n))
         if C != []:
             for i in range(len(C)):
                 P.remove(C[i])
-
+        """ Preparing the P and C that will be passed to the function """
+        
+        """ Another if list to find and call the right function """
+        
         if  self.enumerate == "m-st-lsc" and self.solver == "qr":
             
             t2 = time.process_time()
@@ -8191,47 +8269,39 @@ python syntax of arrays")
             
             return [self.residual_squared,self.indexes,self.coefficients]
         
-    def solve_allsubsets(self,C = []):
-        
+    def solve_allsubsets(self):
         
         """ For performance concerns, only the best algorithm is offered to use for finding all best k subsets for sparsity level
         from 1 to s, """
-        
-        if not type(C) == list and C != []:
-            print("C should be a list, C is taken empty list now ")
-            C = []
-        elif C != [] and (max(C) >= self.n or min(C) < 0):
-            print("Values of C should be valid, in the range 0 <= n-1, C is taken empty list")
-            C = []
-        elif len(set(C)) != len(C):
-            print("Values of C should be unique, C is taken empty list")
-            C = []
-        elif len(C) > self.s:
-            print(" Length of C cannot be greater than spartsity level s,C is taken empty list")
-            C = []
 
-        elif self.many >= self.n:
+        if self.many >= self.n:
             print("Reduce number of best subsets you want to find, it is greater than  or equal to all possibilities")
             return None
         
         mem = hpy()
+        """ memory object """
         mem.heap()
+        """ check the objects that are in memory right now """
         mem.setrelheap()
+        """ referencing this point, memory usage will be calculated """
         t0 = time.process_time()
+        """ referencing this point, cpu usage will be calculated """
         
         if self.out != 2:
             sys.stdout = open(os.devnull, 'w')
         else:
-            sys.stdout = self.original_stdout   
+            sys.stdout = self.original_stdout    
+        """ whether user wants to print every step of the algorithm or not """
             
         P = list(range(self.n))
-        if C != []:
-            for i in range(len(C)):
-                P.remove(C[i])
-             
+        C = []
+        """ Preparing the P and C that will be passed to the function """
+        
+        
         t2 = time.process_time()
         t3 = time.time()
         self.solve_sp_mk0s(P,C)
+        """ mk0 also works, but this is in general faster """
         t4 = time.time()
         finish = time.process_time()
         duration = finish-t0
