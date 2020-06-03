@@ -1,7 +1,4 @@
 # LSSPAR
->A Python Package to solve the following problem:
+>A Python Package to solve sparsity constrained least squares problems
 
-min   ||Ax-b||_2^2
-
-https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/files/lssparquestion.png
 [![INSERT YOUR GRAPHIC HERE](https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/files/lssparquestion.png)]()
