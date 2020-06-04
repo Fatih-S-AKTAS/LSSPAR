@@ -6,7 +6,8 @@ This repository contains a package to solve the following problem
 [![g](https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/files/lssparquestion.png)]()
 
 **Assumptions**
-- System is overdetermined, A is a m x n matrix where m > n
+- System is overdetermined, A is a m x n matrix where m > n.
+- A has full rank, rank(A) = n
 
 # Example Usage
 
