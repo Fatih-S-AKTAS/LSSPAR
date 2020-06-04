@@ -7,6 +7,7 @@ This package solves the following problem
 
 # Example Usage
 
-' 
-from LS_SPAR import *
-'
+
+`
+from LSSPAR import * 
+`
