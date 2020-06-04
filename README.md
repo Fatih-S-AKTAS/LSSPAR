@@ -27,7 +27,7 @@ Then, after downloading LSSPAR.py, it can be used as follows:
 
 from LS_SPAR import * 
 
-A = # some data matrix
+A = # feature (design) Matrix
 b = # vector of variable to be predicted
 s = # sparsity level
 
