@@ -8,6 +8,7 @@ This package solves the following problem
 # Example Usage
 
 
-`
+
+```shell
 from LS_SPAR import * 
-`
+```
