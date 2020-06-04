@@ -32,4 +32,4 @@ question = LSSPAR(A,b,s)
 question.solve()
 ```
 
-more details can be found in Guide for LSSPAR
+more details can be found in <a href="https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/Guide%20for%20LSSPAR.pdf" target="_blank">Guide for LSSPAR</a>
