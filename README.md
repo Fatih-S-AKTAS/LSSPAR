@@ -9,5 +9,5 @@ This package solves the following problem
 
 
 `
-from LSSPAR import * 
+from LS_SPAR import * 
 `
