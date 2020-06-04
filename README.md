@@ -20,7 +20,7 @@ pip install guppy3
 Then, after downloading LSSPAR.py, it can be used as follows:
 
 1. Register values of matrix A, vector b and integer s.
-2. Create instance of object LSSPAR
+2. Create instance of LSSPAR
 3. Call solve function
 
 ```python
