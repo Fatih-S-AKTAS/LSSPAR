@@ -9,6 +9,6 @@ This package solves the following problem
 
 
 
-```shell
+```python
 from LS_SPAR import * 
 ```
