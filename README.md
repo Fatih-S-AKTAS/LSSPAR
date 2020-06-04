@@ -9,7 +9,7 @@ This repository contains a package to solve the following problem
 - System is overdetermined, A is a m x n matrix where m > n.
 - A has full rank, rank(A) = n
 
-# Example Usage
+# Usage
 
 This package uses guppy3 by  YiFei Zhu and Sverker Nilsson for tracking memory usage. Hence guppy3 must be installed prior to using LSSPAR. 
 
