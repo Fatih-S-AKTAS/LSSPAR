@@ -5,7 +5,7 @@ This repository contains a package to solve the following problem
 
 [![g](https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/files/lssparquestion.png)]()
 
-** Assumptions **
+**Assumptions**
 - System is overdetermined, A is a m x n matrix where m > n
 
 # Example Usage
