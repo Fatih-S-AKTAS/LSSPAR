@@ -20,7 +20,7 @@ pip install guppy3
 Then, after downloading LSSPAR.py, it can be used as follows:
 
 ```python
-import numpy as np
+
 from LS_SPAR import * 
 
 A = # some data matrix
@@ -31,3 +31,5 @@ question = LSSPAR(A,b,s)
 
 question.solve()
 ```
+
+more details can be found in Guide for LSSPAR
