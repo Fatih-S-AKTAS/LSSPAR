@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 29 20:00:27 2019
-
-@author: Fatih
-"""
-
 from scipy.linalg import *
 from scipy.sparse import *
 from numpy import *
