@@ -4,3 +4,9 @@
 This package solves the following problem
 
 [![g](https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/files/lssparquestion.png)]()
+
+# Example Usage
+
+' 
+from LS_SPAR import *
+'
