@@ -5,8 +5,7 @@ This repository contains a package to solve the following problem
 
 [![g](https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/files/lssparquestion.png)]()
 
-# Assumptions
-- Matrix A has full rank
+> Assumptions
 - System is overdetermined, A is a m x n matrix where m > n
 
 
@@ -23,4 +22,10 @@ Then, after downloading LSSPAR.py, it can be used as follows:
 
 ```python
 from LS_SPAR import * 
+
+A = Data Matrix
+b = 
+s = sparsity level
+
+question = LSSPAR(A,b,s)
 ```
