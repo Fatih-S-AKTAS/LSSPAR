@@ -11,47 +11,6 @@ import os
 import sys
 import bisect
 #import cvxpy as cp
-    
-def columnsum(M):
-    r = array([0]*len(M[0]))
-    for i in range(len(M)):
-        r = r + M[i]
-    return r
-
-def columnvariance(M):
-    [m,n] = shape(M)
-    v = [0]*n
-    for i in range(n):
-        v[i] = variance(M[:,i])
-    s = array([0]*n)
-    s = [v[j] ** 0.5 for j in range(n)]
-    return [s,v]
-
-
-def columnvariance_mk2(M):
-    [m,n] = shape(M)
-    s = [0]*n
-    for i in range(n):
-        s[i] = statistics.stdev(M[:,i])
-    v = array([0]*n)
-    v = [s[j] ** 2 for j in range(n)]
-    return [s,v]
-    
-
-def columnmin(M):
-    values = [0]*len(M[0])
-    indexes = [0]*len(M[0])
-    for j in range(len(M[0])):
-        val = inf
-        index = 0
-        for i in range(len(M)):
-            if M[i][j] < val:
-                val = M[i][j]
-                index = i
-        values[j] = val
-        indexes[j] = index
-    
-    return [values,indexes]
         
 def f_LI(A,b,x):
 
@@ -630,13 +589,11 @@ for example; Variance will be negative")
             """ initializing the number of end nodes or equivalently number of branching done """
             self.check = 0
             """ initializing number of nodes visited """
-            self.means = columnsum(A)/self.m
+            self.means = abs(A.mean(axis = 0))
             """ storing the mean values of each independent variable which will be used for 
             selection criteria in solver algortihms"""
-            sterror,variances = columnvariance(A)
-            self.sterror = array(sterror)
-            self.variances = array(variances)
-            """ storing the standard deviation and variance of each independent variable which will
+            self.sterror = std(A,axis = 0)
+            """ storing the standard deviation of each independent variable which will
             be used for selection criteria in solver algortihms"""
             self.rem_qsize = 0
             """ initializing remaining queue size after the algorithm finishes """
