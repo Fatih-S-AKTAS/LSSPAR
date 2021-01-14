@@ -37,3 +37,5 @@ question.solve()
 ```
 
 more details can be found in <a href="https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/Guide%20for%20LSSPAR.pdf" target="_blank">Guide for LSSPAR</a>
+
+If you use LSSPAR, please mind citing the paper in the link <a href="https://github.com/Fatih-S-AKTAS/LSSPAR/blob/master/LSSPAR%20Paper.pdf" target="_blank">LSSPAR Paper</a>.
