@@ -25,6 +25,8 @@ class LSSPAR:
         P       = Indexes of possible choices for independent variable
         C       = Chosen set of independent variables
         
+        This Python Code implements the Algorithms described in the paper: Fatih Selim AKTAŞ, Mustafa Çelebi
+        Pınar,"Provably Optimal Sparse Solutions to Overdetermined Linear Systems by Implicit Enumeration"
         
         If you get a pythonic error, it will probably because of how unfriendly is python with usage of 
         vectors, like lists cannot be sliced with indeces but arrays can be done, hstack converts everything
